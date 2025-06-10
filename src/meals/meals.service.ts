@@ -53,7 +53,7 @@ export class MealsService {
       });
 
       if (!user) {
-        throw new Error(`User with ID ${userId} not found`);
+        throw new NotFoundException(`User with ID ${userId} not found`);
       }
 
       const imageUrl = await this.storageService.uploadFile(file);
