@@ -18,9 +18,22 @@ import { UsersModule } from './users/users.module';
     MealsModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        redis: configService.get<string>('REDIS_URL'),
-      }),
+      useFactory: (configService: ConfigService) => {
+        const nodeEnv = configService.get<string>('NODE_ENV');
+        if (nodeEnv === 'production') {
+          return {
+            redis: {
+              host: configService.get<string>('REDIS_HOST'), // IP IPv6 de Redis
+              port: Number(configService.get<string>('REDIS_PORT')) || 6379,
+              family: 6,
+            },
+          };
+        } else {
+          return {
+            redis: configService.get<string>('REDIS_URL'),
+          };
+        }
+      },
       inject: [ConfigService],
     }),
     MealsQueueModule,
