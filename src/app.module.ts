@@ -18,25 +18,9 @@ import { UsersModule } from './users/users.module';
     MealsModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        const redisUrl = configService.get<string>('REDIS_URL');
-        console.log(`💥REDIS_URL: ${redisUrl}`);
-        if (redisUrl) {
-          const url = new URL(redisUrl);
-          return {
-            redis: {
-              host: url.hostname,
-              port: parseInt(url.port) || 6379,
-            },
-          };
-        }
-        return {
-          redis: {
-            host: 'localhost',
-            port: 6379,
-          },
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        redis: configService.get<string>('REDIS_URL'),
+      }),
       inject: [ConfigService],
     }),
     MealsQueueModule,
