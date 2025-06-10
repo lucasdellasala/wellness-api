@@ -67,12 +67,18 @@ export class MealsService {
         },
       });
 
+      this.logger.log(
+        `🔵 Adding meal analysis job to queue: ${createdEvent.id}`,
+      );
       await this.mealAnalysisQueue.add(MEAL_ANALYSIS_JOB, {
         eventId: createdEvent.id,
         userId,
         imageUrl,
         imageBase64,
       });
+      this.logger.log(
+        `✅ Meal analysis job added to queue: ${createdEvent.id}`,
+      );
 
       return { eventId: createdEvent.id };
     } catch (error: unknown) {
