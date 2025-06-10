@@ -20,6 +20,7 @@ import { UsersModule } from './users/users.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const redisUrl = configService.get<string>('REDIS_URL');
+        console.log(`💥REDIS_URL: ${redisUrl}`);
         if (redisUrl) {
           const url = new URL(redisUrl);
           return {
